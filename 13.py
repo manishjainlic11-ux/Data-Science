@@ -1,108 +1,43 @@
-import pandas as pd
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt 
+import numpy as np
+from matplotlib import colors
+from matplotlib.ticker import PercentFormatter
+#example graphs
+a = np.array([22,87,5,43,56,73,55,54,11,20,51,5,79,31,27])
+
+fig, ax = plt.subplots(figsize = (10,7))
+ax.hist(a, bins = [0,25,50,75,100])
+
+plt.show()
 
 
+np.random.seed(23685752)
+N_points = 10000
+n_bins = 20
 
-# Read the uploaded file
-countries_df = pd.read_csv("Countries Data.csv")
 
-countries = countries_df
+x = np.random.randn(N_points)
+y= .8 ** x + np.random.randn(10000) + 25
 
-countries.head(3)
+fig, axs = plt.subplots(1, 1, figsize = (10, 7), tight_layout = True)
+axs.hist(x, bins = n_bins)
 
-# Extract the rows where the year is 1952
-c_52 = countries.loc[countries['year'] == 1952]
-c_52.head()
+plt.show()
 
-# Extract the rows where the year is 2007
-c_07 = countries.loc[countries['year'] == 2007]
-c_07.head()
 
-type(c_52)
+# main activity
+blood_sugar_men = [113, 85, 90 , 150, 149, 88, 93, 115, 135, 80, 77, 82, 129]
+blood_sugar_women = [67, 98, 89, 120, 133, 150, 84, 69, 89, 79, 120, 112, 100]
 
-# Merge the 1952 and 2007 dataframes together
-c_merge = c_52.merge(c_07, left_on='country', right_on='country')
+type = [blood_sugar_men, blood_sugar_women]
+colors = ['g', 'r']
+label = ['men', 'women']
+bins = [80, 100, 125, 150]
+plt.xlabel("Blood Sugar Range")
+plt.ylabel("Total no. of patients")
 
-c_merge.head()
+plt.hist(type, bins=bins, rwidth=0.95, color = colors, label=label, orientation="horizontal")
 
-# Drop both year columns
-c_merge = c_merge.drop(['year_x', 'year_y'], axis=1)
-
-c_merge.head()
-
-# Create a new column for population growth
-c_merge['population_growth'] = (
-    c_merge['population_y'] - c_merge['population_x']
-)
-
-c_merge.head()
-
-# Test the math
-31889923 - 8425333
-
-c_merge.shape, type(c_merge)
-
-# Sort values and get the 10 countries with the biggest population growth
-c_merge = c_merge.sort_values(
-    'population_growth',
-    ascending=False
-).head(10)
-
-c_merge.head(10)
-
-# Reset the index
-c_merge = c_merge.reset_index()
-
-c_merge.head(10)
-
-c_merge.shape
-
-# Drop the index column
-c_merge = c_merge.drop(['index'], axis=1)
-
-c_merge.shape
-
-# Top 10 countries with the highest population growth
-c_merge
-
-# Plot the data
-names = [
-    'China',
-    'India',
-    'United States',
-    'Indonesia',
-    'Brazil',
-    'Pakistan',
-    'Bangladesh',
-    'Nigeria',
-    'Mexico',
-    'Philippines'
-]
-
-pop_grow = c_merge['population_growth'] / 10**6
-
-plt.figure(figsize=(15, 9))
-
-plt.bar(names, pop_grow, width=0.6)
-
-plt.xlabel('Country')
-plt.ylabel('Population Growth (Millions)')
-plt.title(
-    'Top 10 Countries w/the Biggest Population Growth from 1952 to 2007'
-)
-
-plt.xticks(rotation=45)
-
-# Add values above each bar
-for x, y in zip(names, pop_grow):
-    label = "{:.2f}".format(y)
-
-    plt.annotate(
-        label,
-        (x, y),
-        textcoords="offset points",
-        xytext=(0, 10),
-        ha='center'
-    )
-
+plt.title("Blood Sugar Level Chart")
+plt.legend()
 plt.show()
